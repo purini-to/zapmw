@@ -26,13 +26,7 @@ jobs:
           keys:
             - go-cache
 
-      - run:
-          name: Get report tools
-          command: |
-            FILE=$(go env GOPATH)/bin
-            if [ ! -e $FILE/go-junit-report ];then
-              go get -u github.com/jstemmer/go-junit-report
-            fi
+      - run: go get -u github.com/jstemmer/go-junit-report
 
       - run:
           name: Run unit tests
@@ -45,8 +39,7 @@ jobs:
       - save_cache: # Store cache in the /go/pkg directory
           key: go-cache
           paths:
-            - "/go/bin"
-            - "/go/pkg/mod"
+            - "/go/pkg"
 
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: /tmp/test-results
