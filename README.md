@@ -1,6 +1,7 @@
 # zapmw
 
 [![CircleCI](https://circleci.com/gh/purini-to/zapmw/tree/master.svg?style=svg)](https://circleci.com/gh/purini-to/zapmw/tree/master)
+[![codecov](https://codecov.io/gh/purini-to/zapmw/branch/master/graph/badge.svg)](https://codecov.io/gh/purini-to/zapmw)
 
 zapmw is `net/http.Handler` middleware using [zap](https://github.com/uber-go/zap).  
 
