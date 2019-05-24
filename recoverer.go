@@ -1,9 +1,10 @@
 package zapmw
 
 import (
+	"net/http"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"net/http"
 )
 
 // OptionRecoverer is an option to change error response process.

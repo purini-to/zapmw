@@ -1,10 +1,11 @@
 package zapmw
 
 import (
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 	"net/http"
 	"time"
+
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 // OptionRequest is an option to add fields for request log.
