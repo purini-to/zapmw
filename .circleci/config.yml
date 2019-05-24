@@ -27,14 +27,6 @@ jobs:
             - go-cache
 
       - run:
-          name: Get linter tools
-          command: |
-            FILE=$(go env GOPATH)/bin
-            if [ ! -e $FILE/golangci-lint ];then
-              curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $FILE v1.16.0
-            fi
-
-      - run:
           name: Get report tools
           command: |
             FILE=$(go env GOPATH)/bin
@@ -42,15 +34,13 @@ jobs:
               go get -u github.com/jstemmer/go-junit-report
             fi
 
-      # specify any bash command here prefixed with `run: `
-      - run: make lint
-
       - run:
           name: Run unit tests
           # Store the results of our tests in the $TEST_RESULTS directory
           command: |
             trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
             make test | tee ${TEST_RESULTS}/go-test.out
+            bash <(curl -s https://codecov.io/bash)
 
       - save_cache: # Store cache in the /go/pkg directory
           key: go-cache
