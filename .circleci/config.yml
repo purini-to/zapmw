@@ -24,7 +24,7 @@ jobs:
       - restore_cache: # restores saved cache if no changes are detected since last run
           # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
           keys:
-            - go-cache
+            - v1-go-cache
 
       - run: go get -u github.com/jstemmer/go-junit-report
 
@@ -37,7 +37,7 @@ jobs:
             bash <(curl -s https://codecov.io/bash)
 
       - save_cache: # Store cache in the /go/pkg directory
-          key: go-cache
+          key: v1-go-cache
           paths:
             - "/go/pkg"
 
