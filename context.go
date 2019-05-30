@@ -30,8 +30,12 @@ func WithZap(logger *zap.Logger, opts ...OptionWithZap) func(next http.Handler) 
 	}
 }
 
-// GetZap returns the zap logger in a context.
+// GetZap returns the zap logger in a request context.
 func GetZap(r *http.Request) *zap.Logger {
-	z, _ := r.Context().Value(ZapKey).(*zap.Logger)
-	return z
+	return GetZapCtx(r.Context())
+}
+
+// GetZapCtx returns the zap logger in a context.
+func GetZapCtx(ctx context.Context) *zap.Logger {
+	return ctx.Value(ZapKey).(*zap.Logger)
 }
