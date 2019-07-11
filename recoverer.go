@@ -8,7 +8,7 @@ import (
 )
 
 // OptionRecoverer is an option to change error response process.
-type OptionRecoverer func(w http.ResponseWriter, r *http.Request)
+type OptionRecoverer func(w http.ResponseWriter, r *http.Request, rvr interface{}) (isWriteLog bool)
 
 // Recoverer is a middleware that recovers from panics.
 func Recoverer(lvl zapcore.Level, msg string, opts ...OptionRecoverer) func(next http.Handler) http.Handler {
@@ -20,13 +20,18 @@ func Recoverer(lvl zapcore.Level, msg string, opts ...OptionRecoverer) func(next
 			defer func() {
 				if rvr := recover(); rvr != nil {
 
-					logger := GetZap(r)
-					if ce := logger.Check(lvl, msg); ce != nil {
-						ce.Write(zap.Any("error", rvr))
+					isWriteLog := true
+					for _, o := range opts {
+						if !o(w, r, rvr) {
+							isWriteLog = false
+						}
 					}
 
-					for _, o := range opts {
-						o(w, r)
+					if isWriteLog {
+						logger := GetZap(r)
+						if ce := logger.Check(lvl, msg); ce != nil {
+							ce.Write(zap.Any("error", rvr))
+						}
 					}
 				}
 			}()
@@ -37,6 +42,7 @@ func Recoverer(lvl zapcore.Level, msg string, opts ...OptionRecoverer) func(next
 }
 
 // RecovererDefault writes server error response.
-func RecovererDefault(w http.ResponseWriter, _ *http.Request) {
+func RecovererDefault(w http.ResponseWriter, _ *http.Request, _ interface{}) (isWriteLog bool) {
 	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	return true
 }
